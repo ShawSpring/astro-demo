@@ -1,0 +1,21 @@
+---
+import Layout from '../../layouts/Layout.astro';
+import {posts} from '../../utils/fetchPosts';
+---
+
+<Layout title="placeholder">
+  <article class="my-2 mx-4 prose-green prose lg:prose-lg">
+    <h2>posts from jsonplaceholder</h2>
+    <ul>
+      {
+        posts.map((post) => (
+          <li>
+            <a class="hover:underline" href={`/placeholder/${post.id}`}>
+              {post.title}
+            </a>
+          </li>
+        ))
+      }
+    </ul>
+  </article>
+</Layout>

@@ -1,0 +1,22 @@
+---
+title: 第5篇文章
+author: ShawSpring
+description: "这是一个MDX文件"
+image:
+  url: "https://docs.astro.build/assets/rays.webp"
+  alt: "Thumbnail of Astro rays."
+pubDate: 2022-07-15
+tags: ["react", "learning in public", "mdx", "community"]
+---
+
+import Greeting from "../../components/Greeting";
+
+## mdx
+
+需要 [astro MDX 集成](https://docs.astro.build/zh-cn/guides/integrations-guide/mdx/)
+
+```bash
+pnpm astro add mdx
+```
+
+<Greeting messages={["Hej", "Hallo", "Hola", "Habari", "你好"]} client:load />

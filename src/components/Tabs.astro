@@ -1,0 +1,51 @@
+---
+interface Props {
+  tabs: {label: string; code: string}[];
+}
+import {Code} from 'astro-expressive-code/components';
+const {tabs} = Astro.props;
+---
+
+<div>
+  <div class="flex">
+    {
+      tabs.map(({label}, i) => (
+        <label class="select-none cursor-pointer bg-slate-50 px-4 py-1 ring-1 hover:bg-teal-200 [&:has(input:checked)]:bg-teal-200">
+          <input type="radio" name="tabs" data-tab-name={label} checked={i === 0} class="hidden" />
+          <span class="text-sm font-bold">{label}</span>
+        </label>
+      ))
+    }
+  </div>
+
+  {
+    tabs.map(({code, label}) => (
+      <div data-tab-name={label}>
+        <Code code={code} lang="sh" />
+      </div>
+    ))
+  }
+</div>
+
+<script>
+  const radios = document.querySelectorAll(
+    'input[type="radio"][data-tab-name]'
+  ) as NodeListOf<HTMLInputElement>;
+
+  radios.forEach((radio) => {
+    const tabName = radio.dataset.tabName;
+
+    radio.addEventListener('change', () => {
+      const tabContents = document.querySelectorAll(
+        'div[data-tab-name]'
+      ) as NodeListOf<HTMLDivElement>;
+      tabContents.forEach((tabContent) => {
+        tabContent.style.display = 'none';
+      });
+      const activeTab = document.querySelector(`div[data-tab-name=${tabName}]`) as HTMLDivElement;
+      activeTab.style.display = 'block';
+    });
+  });
+</script>
+
+<style></style>

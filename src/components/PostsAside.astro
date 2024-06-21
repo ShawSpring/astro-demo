@@ -1,0 +1,119 @@
+---
+import {Icon} from 'astro-icon/components';
+import {getCollection} from 'astro:content';
+
+// const allPosts = await Astro.glob('../pages/posts/*.{md,mdx}');
+const allPosts = await getCollection('posts');
+---
+
+<aside id="posts-aside" class="z-10">
+  <ul>
+    {
+      allPosts.map((post) => (
+        <li>
+          {/* <a href={post.url}>{post.frontmatter.title}</a> */}
+          <a href={`/${post.collection}/${post.slug}`}>{post.data.title}</a>
+        </li>
+      ))
+    }
+  </ul>
+
+  <div class="toggle-panel" role="button" aria-label="Expand" aria-hidden="true">
+    <button>
+      <Icon name="RiExpandRightLine" />
+    </button>
+  </div>
+</aside>
+
+<script>
+  const toggle = document.querySelector('aside#posts-aside .toggle-panel') as HTMLButtonElement;
+  const aside = document.querySelector('aside#posts-aside') as HTMLDivElement;
+  const ul = document.querySelector('aside#posts-aside ul') as HTMLUListElement;
+  toggle.addEventListener('click', () => {
+    aside.classList.toggle('expanded');
+  });
+</script>
+
+<style>
+  .toggle-panel {
+    flex: 0 0 var(--w-toggle-panel);
+    height: 100%;
+    --w-toggle-panel: 2rem;
+    position: relative;
+    cursor: pointer;
+    background-color: #bec;
+    box-shadow: 2px 0 2px rgba(0, 0, 0, 0.3);
+    &:hover {
+      background-color: #dee;
+    }
+  }
+  button {
+    background-color: #dee;
+    width: var(--w-toggle-panel);
+    border: none;
+    height: 4rem;
+    cursor: pointer;
+    position: absolute;
+    top: 40%; /* 别放中间，偏上一点 */
+    right: 0;
+    svg {
+      transition: transform 0.3s ease-in-out;
+      width: var(--w-toggle-panel);
+      height: 4rem;
+    }
+  }
+  ul {
+    list-style: none;
+
+    li {
+      /* height: 2.5rem; */
+      /* line-height: 2.5rem; */
+      padding: 0.5rem 0.75rem;
+      cursor: pointer;
+      font-size: larger;
+
+      &:hover {
+        background-color: rgb(160, 208, 203);
+        text-decoration: underline;
+      }
+      a {
+        text-decoration: none;
+      }
+    }
+  }
+  aside {
+    transition: flex-basis 0.3s ease-out;
+    flex: 0 0 fit-content;
+    width: 0px;
+    display: flex;
+    flex-flow: row nowrap;
+    background-color: #ded;
+    flex-basis: 2rem;
+  }
+  ul {
+    flex: 0 1 fit-content;
+    width: calc(100% - var(--w-toggle-panel));
+    height: calc(100vh - var(--header-h));
+    overflow-y: auto;
+  }
+
+  aside.expanded {
+    flex-basis: 200px;
+
+    svg {
+      transform: rotate(180deg);
+    }
+    button {
+      background-color: #fdd;
+    }
+  }
+
+  @media screen and (min-width: 640px) {
+    aside {
+      flex-basis: fit-content;
+    }
+    .toggle-panel {
+      display: none;
+    }
+  }
+</style>

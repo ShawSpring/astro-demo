@@ -1,0 +1,31 @@
+---
+import type {GetStaticPaths} from 'astro';
+import Layout from '../../layouts/Layout.astro';
+import {posts, users} from '../../utils/fetchPosts';
+
+/*  SSR 模式下， getStaticPaths被忽略， 需要下面这句来指明 该页面构建时预渲染 */
+export const prerender = true;
+export const getStaticPaths = (() => {
+  return posts.map((post) => {
+    return {
+      params: {
+        id: post.id,
+      },
+      props: {
+        post,
+        user: users.find((u) => u.id === post.userId),
+      },
+    };
+  });
+}) satisfies GetStaticPaths;
+const {post, user} = Astro.props;
+---
+
+<Layout title={post.title}>
+  <article class="w-4/5 mx-auto my-2 prose-sm md:prose-base lg:prose-lg">
+    <p>placeholder</p>
+    <h2 class="text-2xl font-semibold">{post.title}</h2>
+    <small>{user?.name}</small>
+    <p>{post.body}</p>
+  </article>
+</Layout>

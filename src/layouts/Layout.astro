@@ -1,51 +1,102 @@
 ---
 interface Props {
-	title: string;
+  title?: string;
 }
-
-const { title } = Astro.props;
+import Footer from '../components/Footer.astro';
+import Header from '../components/Header.astro';
+const {title = 'Astro'} = Astro.props;
+import {ViewTransitions, fade, slide} from 'astro:transitions';
 ---
 
 <!doctype html>
 <html lang="en">
-	<head>
-		<meta charset="UTF-8" />
-		<meta name="description" content="Astro description" />
-		<meta name="viewport" content="width=device-width" />
-		<link rel="icon" type="image/svg+xml" href="/favicon.svg" />
-		<meta name="generator" content={Astro.generator} />
-		<title>{Astro.props.title}</title>
-	</head>
-	<body>
-		<slot />
-	</body>
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="description" content="Astro description" />
+    <meta name="viewport" content="width=device-width" />
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <meta name="generator" content={Astro.generator} />
+    <title>{title}</title>
+    <ViewTransitions />
+  </head>
+  <body>
+    <Header />
+
+    <div class="container">
+      <slot />
+    </div>
+    <Footer />
+    <style is:global>
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
+      :root {
+        --header-h: 3.2rem;
+        --w-aside: 200px;
+        --accent: 136, 58, 234;
+        --accent-light: 224, 204, 250;
+        --accent-dark: 49, 10, 101;
+        --accent-gradient: linear-gradient(
+          45deg,
+          rgb(var(--accent)),
+          rgb(var(--accent-light)) 30%,
+          #ccc 60%
+        );
+      }
+
+      html {
+        font-family: system-ui, sans-serif;
+        background-size: 224px;
+        background: #eee;
+        color: #13151a;
+        scroll-behavior: smooth;
+      }
+      @media (prefers-color-scheme: dark) {
+        html {
+          background: #13151a;
+          color: #ded;
+        }
+      }
+      /* 布局 */
+      body {
+        padding-top: var(--header-h);
+        margin-top: calc(var(--header-h) * -1);
+        padding-top: calc(var(--header-h) * 2);
+      }
+
+      header {
+        width: 100%;
+      }
+      .container {
+        position: relative;
+        min-height: calc(100vh - var(--header-h));
+      }
+
+      code {
+        font-family:
+          Menlo,
+          Monaco,
+          Lucida Console,
+          Liberation Mono,
+          DejaVu Sans Mono,
+          Bitstream Vera Sans Mono,
+          Courier New,
+          monospace;
+      }
+      /* heading anchor 样式 */
+      :where(h1, h2, h3, h4, h5, h6) > a > .icon {
+        display: inline-block;
+        width: 1.5rem;
+        height: 1.5rem;
+        margin-right: 0.5rem;
+        background-repeat: no-repeat;
+        background-size: 100% 100%;
+      }
+      :where(h1, h2, h3, h4, h5, h6):hover > a > .icon {
+        background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 48 48'%3E%3Cg fill='none' stroke='currentColor' stroke-linejoin='round' stroke-width='4'%3E%3Crect width='14' height='18' x='34.607' y='3.494' rx='2' transform='rotate(45 34.607 3.494)'/%3E%3Crect width='14' height='18' x='16.223' y='21.879' rx='2' transform='rotate(45 16.223 21.879)'/%3E%3Cpath stroke-linecap='round' d='M31.0723 16.929L16.9301 31.0711'/%3E%3C/g%3E%3C/svg%3E");
+      }
+    </style>
+  </body>
 </html>
-<style is:global>
-	:root {
-		--accent: 136, 58, 234;
-		--accent-light: 224, 204, 250;
-		--accent-dark: 49, 10, 101;
-		--accent-gradient: linear-gradient(
-			45deg,
-			rgb(var(--accent)),
-			rgb(var(--accent-light)) 30%,
-			#ccc 60%
-		);
-	}
-	html {
-		font-family: system-ui, sans-serif;
-		background: #13151a;
-		background-size: 224px;
-	}
-	code {
-		font-family:
-			Menlo,
-			Monaco,
-			Lucida Console,
-			Liberation Mono,
-			DejaVu Sans Mono,
-			Bitstream Vera Sans Mono,
-			Courier New,
-			monospace;
-	}
-</style>

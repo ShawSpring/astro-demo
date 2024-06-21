@@ -1,0 +1,133 @@
+---
+import Layout from '../layouts/Layout.astro';
+import {Image} from 'astro:assets';
+const {frontmatter, title} = Astro.props;
+import PostsAside from '../components/PostsAside.astro';
+import {ViewTransitions, fade, slide} from 'astro:transitions';
+import {type CollectionEntry} from 'astro:content';
+interface Props {
+  title: string;
+  frontmatter: CollectionEntry<'posts'>['data'];
+}
+---
+
+<Layout title={`${title ?? 'Blog'} | Astro`}>
+  <div class="post-container">
+    <main transition:animate={slide({duration: '0.3s'})}>
+      <article
+        class="prose dark:prose-invert prose-code:after:content-['_'] prose-code:before:content-['_'] prose-cyan prose-slate prose-pre:bg-red-200 prose-strong:text-blue-600 prose-h1:text-teal-600 prose-h2:text-emerald-600 prose-h3:text-sky-500 lg:prose-lg">
+        {
+          frontmatter && (
+            <>
+              <h1 id="top-title">{frontmatter.title}</h1>
+              <p>
+                <em>{frontmatter.description}</em>
+              </p>
+              <small>
+                Written by {frontmatter.author} on {frontmatter.pubDate.toString().slice(0, 10)}
+              </small>
+              <Image
+                src={frontmatter.image.url}
+                width="300"
+                height="180"
+                alt={frontmatter.image.alt}
+              />
+              <div class="tags">
+                {frontmatter.tags.map((tag) => (
+                  <span class="tag">
+                    <a href={`/tags/${tag}`}>{tag}</a>
+                  </span>
+                ))}
+              </div>
+              <hr />
+            </>
+          )
+        }
+
+        <slot />
+        <!-- <h2><a href="#">Back to top</a></h2> -->
+        <!-- href='#'可以，但是页面进入动画也生效了 -->
+        <h2 class="cursor-pointer">
+          <button onclick="window.scrollTo({top: 0, behavior: 'smooth'});">Back to top</button>
+        </h2>
+      </article>
+    </main>
+    <PostsAside />
+  </div>
+</Layout>
+<script>
+  const anchors = document.querySelectorAll('.post-container :where(h1,h2,h3,h4,h5,h6) a');
+  anchors.forEach((anchor) => {
+    anchor.addEventListener('click', (event) => {
+      const hash = anchor.getAttribute('href')?.slice(1);
+      window.location.hash = hash || '#';
+      event.preventDefault();
+      const target = document.querySelector(`#${hash}`);
+      if (!target) {
+        window.scrollTo({top: 0, behavior: 'smooth'});
+        return;
+      }
+      const {top, height} = target!.getBoundingClientRect();
+      const scrollPosition = window.scrollY + top - height - 20;
+      window.outerHeight;
+      window.scrollTo({top: scrollPosition, behavior: 'smooth'});
+    });
+  });
+</script>
+
+<style>
+  .post-container {
+    padding-left: 200px;
+  }
+
+  main {
+    order: 2;
+    flex: 1 1 auto;
+    padding: 1rem 2rem;
+    min-height: calc(100vh - var(--header-h));
+  }
+  article {
+  }
+
+  .post-container :global(aside) {
+    position: fixed;
+    top: var(--header-h);
+    left: 0;
+    order: 1;
+    width: 200px;
+    /* flex: 0 0 200px; */
+    height: calc(100vh - var(--header-h));
+    border-right: 1px solid rgb(190 190 190/0.8);
+    overflow: auto;
+  }
+  footer {
+    width: calc(100% - var(--w-aside)) !important;
+    margin-left: var(--w-aside) !important;
+  }
+
+  .tags {
+    margin-top: 0.25rem 1rem;
+    display: flex;
+    flex-flow: row wrap;
+    gap: 0.25rem;
+  }
+  .tag {
+    margin: 0.25em;
+    border: dotted 1px #a1a1a1;
+    border-radius: 0.5em;
+    padding: 0.25em 0.5em;
+    font-size: 1.15em;
+    background-color: #f8fcfd;
+  }
+  /* :global(#toc) {
+    color: red;
+    position: fixed;
+    top: 6rem;
+    right: 2.5rem;
+    & ~ :global(ul) {
+      position: fixed;
+      top: 12rem;
+      right: 0;
+    }
+  } */
+</style>

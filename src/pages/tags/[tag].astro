@@ -1,0 +1,42 @@
+---
+import type {GetStaticPaths} from 'astro';
+import Layout from '../../layouts/Layout.astro';
+import {getCollection} from 'astro:content';
+// export async function getStaticPaths() {
+//   const allposts = await Astro.glob('../posts/*.md');
+//   return [
+//     {params: {tag: 'astro'}, props: {posts: allposts}},
+//     {params: {tag: 'blogging'}, props: {posts: allposts}},
+//     {params: {tag: 'learning in public'}, props: {posts: allposts}},
+//     {params: {tag: 'successes'}, props: {posts: allposts}},
+//     {params: {tag: 'setbacks'}, props: {posts: allposts}},
+//     {params: {tag: 'community'}, props: {posts: allposts}},
+//     {params: {tag: 'react'}, props: {posts: allposts}},
+//   ];
+// }
+
+export const getStaticPaths = (async () => {
+  // const allposts = await Astro.glob('../posts/*.md');
+  const allposts = await getCollection('posts');
+  const uniqueTags = [...new Set(allposts.map((post) => post.data.tags).flat())];
+
+  return uniqueTags.map((tag) => {
+    const filteredPosts = allposts.filter((post) => post.data.tags?.includes(tag));
+    return {params: {tag}, props: {posts: filteredPosts}};
+  });
+}) satisfies GetStaticPaths;
+
+const {tag} = Astro.params;
+const {posts} = Astro.props;
+---
+
+<Layout title={tag + ' | tags'}>
+  <p>包含tag [{tag}] 的文章</p>
+  {
+    posts.map((post) => (
+      <p>
+        <a href={`/posts/${post.slug}`}>{post.data.title}</a>
+      </p>
+    ))
+  }
+</Layout>

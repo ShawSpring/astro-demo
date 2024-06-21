@@ -1,0 +1,221 @@
+---
+title: "Expressive code"
+pubDate: 2024-06-18
+description: "Expressive code 是一个富有表现力的代码代码高亮包，基于shiki,提供了astro next的集成"
+author: "Shaw Spring"
+image:
+  url: "https://expressive-code.com/_astro/expressive-code.GfwHDmAE_oKKag.svg"
+  alt: "The Expressive code logo."
+tags: ["astro", "blogging", "code", "highlight"]
+---
+
+[Expressive code](https://expressive-code.com/)
+
+You can add Expressive Code to your Astro site by installing our framework integration `astro-expressive-code`. Follow these steps:
+
+## Install
+
+import PackageManagers from "../../components/PackageManagers.astro";
+
+<PackageManagers pkg="astro" exec="add astro-expressive-code" />
+
+## config
+
+```js
+/* astro.config.mjs */
+import { defineConfig } from "astro/config";
+import astroExpressiveCode from "astro-expressive-code";
+// Add this if you want to load a custom language grammar from a file:
+// import fs from 'node:fs'
+
+export default defineConfig({
+  integrations: [
+    astroExpressiveCode({
+      // You can use any of the themes bundled with Shiki by name,
+      // specify a path to JSON theme file, or pass an instance
+      // of the `ExpressiveCodeTheme` class here:
+      themes: ["dracula", "solarized-light"],
+      shiki: {
+        // You can pass additional plugin options here,
+        // e.g. to load custom language grammars:
+        langs: [
+          // import('./some-exported-grammar.mjs'),
+          // JSON.parse(fs.readFileSync('./some-json-grammar.json', 'utf-8'))
+        ],
+      },
+    }),
+  ],
+});
+```
+
+## Code editor frames
+
+像 vscode 一样的代码编辑器，周边有框，上面有 Tab, 需要设置 title
+
+To do this, you can either set the `title` attribute in the opening code fence to a file name, or add a [file name comment](#file-name-comments) to the first lines of the code.
+
+See the markdown code below for examples of both methods:
+
+````md title="editor-example.md" ins=/title=".*?"/ ins=/<!--.*?-->/
+```js title="my-test-file.js"
+console.log("Title attribute example");
+```
+
+```html
+<!-- src/content/index.html -->
+<div>File name comment example</div>
+```
+````
+
+The rendered result looks like this:
+
+```js title="my-test-file.js"
+console.log("Title attribute example");
+```
+
+```html
+<!-- src/content/index.html -->
+<div>File name comment example</div>
+```
+
+## Terminal frames
+
+````md
+```sh
+echo "This terminal frame has no title"
+```
+
+```powershell title="PowerShell terminal example"
+Write-Output "This one has a title!"
+```
+````
+
+result:
+
+```sh
+echo "This terminal frame has no title"
+```
+
+```powershell title="PowerShell terminal example"
+Write-Output "This one has a title!"
+```
+
+<hr />
+
+# Text & Line Markers
+
+## 高亮指定行
+
+`{1, 4, 7-8}`
+
+```js {1, 4, 7-8}
+// Line 1 - targeted by line number
+// Line 2
+// Line 3
+// Line 4 - targeted by line number
+// Line 5
+// Line 6
+// Line 7 - targeted by range "7-8"
+// Line 8 - targeted by range "7-8"
+```
+
+### 高亮类型 ins del
+
+就像 diff 中的`+` 和 `-`
+
+```js title="line-markers.js" del={2} ins={3-4} {6}
+function demo() {
+  console.log("this line is marked as deleted");
+  // This line and the next one are marked as inserted
+  console.log("this is the second inserted line");
+
+  return "this line uses the neutral default marker type";
+}
+```
+
+### 高亮行指定 label
+
+`{"1":5} del={"2":7-8} ins={"3":10-12}`
+
+```jsx {"1":5} del={"2":7-8} ins={"3":10-12}
+// labeled-line-markers.jsx
+<button
+  role="button"
+  {...props}
+  value={value}
+  className={buttonClassName}
+  disabled={disabled}
+  active={active}
+>
+  {children &&
+    !active &&
+    (typeof children === "string" ? <span>{children}</span> : children)}
+</button>
+```
+
+### diff 语法，通过 lang=''指定语言
+
+```diff title="difflike.js" lang="js"
+function demo() {
+- console.log("this line is marked as deleted");
+  // This line and the next one are marked as inserted
++ console.log("this is the second inserted line");
+
+  return "this line uses the neutral default marker type";
+}
+```
+
+## 字符串高亮
+
+直接````js "given text" `
+
+```js "given text"
+function demo() {
+  // Mark any given text inside lines
+  return "Multiple matches of the given text are supported";
+}
+```
+
+### 正则匹配字符串高亮
+
+````ts /ye[sp]/`
+
+```ts /ye[sp]/
+console.log("The words yes and yep will be marked.");
+```
+
+## word wrap
+
+可以通过 `wrap` 来控制是否换行，默认为 `false`, 不换行，会有滚动条
+
+可以在`astro.config.mjs`中统一设置
+
+```js wrap
+// Example with wrap
+function getLongString() {
+  return "This is a very long string that will most probably not fit into the available space unless the container is extremely wide";
+}
+```
+
+```js wrap=false
+// Example with wrap=false
+function getLongString() {
+  return "This is a very long string that will most probably not fit into the available space unless the container is extremely wide";
+}
+```
+
+## Code Components
+
+还可以在 .astro 或 .mdx 中使用 `Code` 组件,来动态的渲染代码块
+
+import Reveal from "../../components/Reveal.astro";
+
+<Reveal path="src/components/Reveal.astro" />
+
+或者可以使用`import ?raw`来导入原始代码
+
+import { Code } from "astro-expressive-code/components";
+
+import importedCode from "/src/env.d.ts?raw";
+
+<Code code={importedCode} lang="ts" title="src/env.d.ts" />

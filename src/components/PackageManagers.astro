@@ -1,0 +1,47 @@
+---
+import {Code} from 'astro-expressive-code/components';
+import Tabs from './Tabs.astro';
+
+type Props = {
+  pkg?: string | undefined;
+  exec?: string | undefined;
+  prefix?: string | undefined;
+  peer: boolean;
+};
+
+const {pkg, peer, exec, prefix} = Astro.props;
+
+const buildCode = (...parts: (string | undefined)[]) => {
+  const code = parts.filter(Boolean).join('\n');
+  return code;
+};
+
+const tabContents = [
+  {
+    label: 'npm',
+    code: buildCode(
+      prefix,
+      pkg ? (exec ? `npx ${pkg} ${exec}` : `npm i ${peer ? '--save-peer ' : ''}${pkg}`) : `npm i`
+    ),
+  },
+  {
+    label: 'pnpm',
+    code: buildCode(
+      prefix,
+      pkg ? (exec ? `pnpm ${pkg} ${exec}` : `pnpm i ${peer ? '--save-peer ' : ''}${pkg}`) : `pnpm i`
+    ),
+  },
+  {
+    label: 'yarn',
+    code: buildCode(
+      prefix,
+      pkg ? (exec ? `yarn ${pkg} ${exec}` : `yarn add ${pkg}${peer ? ' --peer ' : ''}`) : `yarn`
+    ),
+  },
+];
+---
+
+<!-- ** 报错，astro中无法在函数中动态渲染组件 --><!-- <Tabs
+  tabs={tabContents.map(({label, code}) => ({label, content: <Code code={code} lang="sh" />}))}
+/> -->
+<Tabs tabs={tabContents} />
