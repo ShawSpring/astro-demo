@@ -85,7 +85,7 @@ import {ViewTransitions, fade, slide} from 'astro:transitions';
           Courier New,
           monospace;
       }
-      /* heading anchor 样式 */
+      /* rehypeAutolinkHeadings插件给headings添加了anchor,但是样式还需要改改 */
       :where(h1, h2, h3, h4, h5, h6) > a > .icon {
         display: inline-block;
         width: 1.5rem;
@@ -96,6 +96,13 @@ import {ViewTransitions, fade, slide} from 'astro:transitions';
       }
       :where(h1, h2, h3, h4, h5, h6):hover > a > .icon {
         background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 48 48'%3E%3Cg fill='none' stroke='currentColor' stroke-linejoin='round' stroke-width='4'%3E%3Crect width='14' height='18' x='34.607' y='3.494' rx='2' transform='rotate(45 34.607 3.494)'/%3E%3Crect width='14' height='18' x='16.223' y='21.879' rx='2' transform='rotate(45 16.223 21.879)'/%3E%3Cpath stroke-linecap='round' d='M31.0723 16.929L16.9301 31.0711'/%3E%3C/g%3E%3C/svg%3E");
+      }
+
+      .heading-anchor{
+        opacity: 0;
+      }
+      .heading-anchor:hover{
+        opacity: 1;
       }
     </style>
   </body>

@@ -324,3 +324,28 @@ async function validation(_, next) {
 ...
 export const onRequest = sequence(validation, auth, greeting);
 ```
+
+
+## Markdown / MDX
+
+插件收集：
+rehype-sanitize  防止 XSS
+
+支持obsidian的callout语法， 使得obsidian上的md文件能直接用于astro
+[remark-obsidian-callout
+](https://www.npmjs.com/package/remark-obsidian-callout)
+> 没样式(可以自己css调)， 没有收起展开功能， 需要修改源码。
+想法： 可以生成一个headless组件，交互就修改data-* 属性。
+
+
+添加标题锚点连接
+[rehype-slug-anchor-sectionize](https://www.npmjs.com/package/rehype-slug-anchor-sectionize#optionswrapperslugadditivesectionize)
+```ts
+// add ids to headings.
+import rehypeSlug from "rehype-slug";
+// add links to headings, 需要rehype-slug 才起作用。
+import rehypeAutolinkHeadings from "rehype-autolink-headings";
+// 代替上面两个，不同点在于，有section包裹，可惜href是指向headings， 不是section.
+import rehypeSlugAnchorSectionize from 'rehype-slug-anchor-sectionize'
+```
+

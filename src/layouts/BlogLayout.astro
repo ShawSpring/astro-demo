@@ -56,23 +56,6 @@ interface Props {
   </div>
 </Layout>
 <script>
-  const anchors = document.querySelectorAll('.post-container :where(h1,h2,h3,h4,h5,h6) a');
-  anchors.forEach((anchor) => {
-    anchor.addEventListener('click', (event) => {
-      const hash = anchor.getAttribute('href')?.slice(1);
-      window.location.hash = hash || '#';
-      event.preventDefault();
-      const target = document.querySelector(`#${hash}`);
-      if (!target) {
-        window.scrollTo({top: 0, behavior: 'smooth'});
-        return;
-      }
-      const {top, height} = target!.getBoundingClientRect();
-      const scrollPosition = window.scrollY + top - height - 20;
-      window.outerHeight;
-      window.scrollTo({top: scrollPosition, behavior: 'smooth'});
-    });
-  });
 </script>
 
 <style>

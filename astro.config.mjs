@@ -3,8 +3,15 @@ import icon from "astro-icon";
 import mdx from "@astrojs/mdx";
 import tailwind from "@astrojs/tailwind";
 import remarkToc from "remark-toc";
+// add ids to headings.
 import rehypeSlug from "rehype-slug";
+// add links to headings
 import rehypeAutolinkHeadings from "rehype-autolink-headings";
+
+import rehypeSlugAnchorSectionize from 'rehype-slug-anchor-sectionize'
+
+import remarkObsidianCallout from "remark-obsidian-callout";
+
 
 //* https://expressive-code.com/installation/
 // 增强code block， 比如:指定行、字符串高亮, title
@@ -31,27 +38,28 @@ export default defineConfig({
   markdown: {
     // 将ascii标点符号，智能转换为对应排版的符号,默认为true
     smartypants: false,
-    remarkPlugins: [remarkToc],
+    remarkPlugins: [remarkToc,remarkObsidianCallout],
     rehypePlugins: [
-      rehypeSlug,
-      [
-        /*  
-    md/mdx 中的headings 自动添加anchor后，
-    <h2 id='title'> <a href='#title' class='heading-link' aria-hidden='true' tabindex='-1'><span class='icon icon-link'></span></a> title </h2>
-    然后在自己处理a标签的样式。模式是 
-    html: scroll-behavior: smooth;
-    */
+      [rehypeSlugAnchorSectionize,{}],
+    //   rehypeSlug,
+    //   [
+    //     /*  
+    // md/mdx 中的headings 自动添加anchor后，
+    // <h2 id='title'> <a href='#title' class='heading-link' aria-hidden='true' tabindex='-1'><span class='icon icon-link'></span></a> title </h2>
+    // 然后在自己处理a标签的样式。模式是 
+    // html: scroll-behavior: smooth;
+    // */
 
-        rehypeAutolinkHeadings,
-        {
-          behavior: "prepend",
-          properties: {
-            ariaHidden: "true",
-            tabIndex: -1,
-            class: "heading-link",
-          },
-        },
-      ],
+    //     rehypeAutolinkHeadings,
+    //     {
+    //       behavior: "prepend",
+    //       properties: {
+    //         ariaHidden: "true",
+    //         tabIndex: -1,
+    //         class: "heading-link",
+    //       },
+    //     },
+    //   ],
     ],
     //* 使用了astro-expressive-code，代码高亮不再是内置的shiki，需要到expressiveCode内去配置代码高亮
     // shikiConfig: {
