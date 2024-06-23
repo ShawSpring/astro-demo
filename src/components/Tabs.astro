@@ -18,10 +18,9 @@ const defaultTabName = tabs[0].label;
       ))
     }
   </div>
-
   {
     tabs.map(({code, label}) => (
-      <div data-tab-name={label} class:list={[label === defaultTabName?"block":"hidden"]}>
+      <div data-tab-name={label}>
         <Code code={code} lang="sh" />
       </div>
     ))
@@ -29,6 +28,12 @@ const defaultTabName = tabs[0].label;
 </div>
 
 <script>
+  import {$pkgManeger} from '@/store';
+
+  $pkgManeger.subscribe((value) => {
+    setActiveTab(value);
+  });
+
   // const defaultTabName =
   function setActiveTab(tabName: string) {
     const tabContents = document.querySelectorAll(
@@ -42,24 +47,26 @@ const defaultTabName = tabs[0].label;
   }
 
   document.addEventListener('astro:page-load', () => {
-    console.log('----------astro:page-load-----');
-
+    console.log('----------astro:page-load-----',$pkgManeger.get());
+    setActiveTab($pkgManeger.get());
     const radios = document.querySelectorAll(
       'input[type="radio"][data-tab-name]'
     ) as NodeListOf<HTMLInputElement>;
-    if (!radios) return;
-    radios.forEach((radio) => {
-      const tabName = radio.dataset.tabName as string;
-      radio.addEventListener('change', () => {
-        setActiveTab(tabName);
+    if (radios) {
+      radios.forEach((radio) => {
+        const tabName = radio.dataset.tabName as string;
+        if(tabName === $pkgManeger.get()) radio.checked = true;
+        radio.addEventListener('change', () => {
+          //@ts-ignore
+          $pkgManeger.set(tabName);
+        });
       });
-    });
+    }
   });
 </script>
 
-
 <style>
-  div[data-tab-name]{
+  div[data-tab-name] {
     animation: fadeIn 0.4s ease-out;
   }
   @keyframes fadeIn {
