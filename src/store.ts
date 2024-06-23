@@ -1,3 +1,6 @@
 import { atom } from 'nanostores';
 
-export const isOpen = atom(false);
+declare type PkgManeger = 'npm' | 'yarn' | 'pnpm';
+
+export const $pkgManeger = atom<PkgManeger>('npm');
+

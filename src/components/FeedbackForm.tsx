@@ -49,6 +49,8 @@ export default function Form() {
             id="name"
             name="name"
             autoComplete="name"
+            minLength={6}
+            maxLength={20}
             onChange={() => setState({})}
             required
           />
@@ -61,7 +63,7 @@ export default function Form() {
       </div>
 
       <div className="relative  pb-8">
-        <label htmlFor="email" className="flex justify-between">
+        <label htmlFor="email" className="flex justify-between" >
           Email
           <input
             type="email"

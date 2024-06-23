@@ -56,11 +56,63 @@ import Heading from '../components/Heading.astro';
 [Astro.request](https://docs.astro.build/zh-cn/reference/api-reference/#astrorequest)
 Astro.request 是一个标准的 请求 对象。它可以用来获取请求的 url、headers、method，甚至是请求的主体。
 
+[.astro页面同时作为表单服务端](https://docs.astro.build/zh-cn/recipes/build-forms/)
+就像php一样，可以同时处理服务端和客户端代码。 在astro中构建表单，frontmatter就是服务端代码， 
+前提：`output: 'server'`
 ```ts
 ---
-const cookie = Astro.request.headers.get("cookie");
+// https://docs.astro.build/zh-cn/recipes/build-forms/
+const errors = {username: '', email: '', password: ''};
+if (Astro.request.method === 'POST') { // 访问页面就是'GET'方法
+  try {
+    const data = await Astro.request.formData();
+    const formData = Object.fromEntries(data);
+    console.log('received formData: ', formData);
+    if (typeof formData.password !== 'string' || formData.password.length < 6) {
+      errors.password = 'Password must be at least 6 characters. ';
+    } else {
+      if (formData.password !== '123456') {
+        errors.password = 'wrong password!';
+      }
+    }
+    // do something, fake code
+    // const hasErrors = Object.values(errors).some(msg => msg)
+    // if (!hasErrors) {
+    //   await registerUser({name, email, password});
+    //   return Astro.redirect("/login");
+    // }
+  } catch (error) {
+    if (error instanceof Error) {
+      console.error(error.message);
+    }
+  }
+}
+
+import Layout from '@/layouts/Layout.astro';
 ---
-<p>Received a {Astro.request.method} request</p>;
+
+<Layout title="Register form">
+  <h1 class={'text-center my-4'}>Register</h1>
+  <!-- ! 没有填写action属性，像php一样像当前页面提交，页面会刷新(view transition导致无感知)，-->
+  <form
+    method="POST"
+    class:list={'max-w-96 flex flex-col p-4 gap-4 mx-auto ring-1  [&_input]:border [&_input]:border-black [&_label]:flex [&_input]:ml-auto'}>
+    <label>
+      Username:
+      <input type="text" name="username" required />
+    </label>
+    <label>
+      Email:
+      <input type="email" name="email" required />
+    </label>
+    <label>
+      Password:
+      <input type="password" name="password" required minlength="6" />
+    </label>
+    {errors.password && <p class="text-red-500">{errors.password}</p>}
+    <button class="hover:ring-1 shadow-sm">Submit</button>
+  </form>
+</Layout>
 ```
 
 [Astro.url](https://docs.astro.build/zh-cn/reference/api-reference/#astrourl)
@@ -81,7 +133,7 @@ const pathname = Astro.url.pathname;
 
 ### 组件脚本像一个 async 函数
 
-除了 import / export 外，组件脚本就像是一个 async 函数。可以顶层使用 `await` 和 `return`
+除了 import / export 外，组件脚本就像是一个 async 函数。有顶层的 `await` 和 `return`
 
 ```ts
 ---
