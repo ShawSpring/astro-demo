@@ -125,6 +125,62 @@ astro 组件是纯 HTML 的模板组件，没有客户端运行时。只能使�
 
 ---
 
+## 客户端脚本
+
+"---" frontmatter 中的代码为服务端代码，`<script>` 中的是客户端代码。
+
+### [客户端脚本处理](https://docs.astro.build/zh-cn/guides/client-side-scripts/#%E8%84%9A%E6%9C%AC%E5%A4%84%E7%90%86)
+
+脚本是打包在一起的，每页只包含一次。包含多个组件，组件中的`<script>`会只剩一个。
+
+会处理！会打包！支持 TypeScript！也可以导入本地脚本和 Node 模块。
+处理过的脚本会被注入到你的页面的` <head>`，同时添加 `type="module"`
+`type="module"` 的脚本会等 html 处理完后才执行，因此无需监听 “load” 事件。
+
+is:inline 即 astro 不处理脚本。直接在 html 保持原样。
+
+> 目前我没看到这样使用的场景， 先不考虑这个。
+> 在 `<script>` 标签添加 type="module" 或 define:vars 等除 src 之外的任何属性，都会使 Astro 将该标签视为具有 is:inline 指令。
+
+### 将变量传给客户端脚本
+
+> 注意，对象需要 JSON.stringify 序列化
+> 两种方法:
+
+1.  [define:vars](https://docs.astro.build/zh-cn/reference/directives-reference/#definevars)
+2.  dataset 在 html 的自定义属性中加载信息。
+
+> define:vars 在 style中好像只能够作为css变量，var(--xxx) 这样使用。以下代码无效。
+```html
+<style define:vars={{defaultTabName}}>
+  div[data-tab-name=defaultTabName] { 
+    display: block;
+  }
+</style>
+```
+
+### astro:page-load
+
+有视图过渡时，使用 astro:page-load 代替 DOMContentLoaded。
+
+```ts
+// document.addEventListener('DOMContentLoaded', () => {
+document.addEventListener('astro:page-load', () => {
+}）
+
+```
+
+### [ViewTransition 生命周期](https://docs.astro.build/zh-cn/guides/view-transitions/#%E7%94%9F%E5%91%BD%E5%91%A8%E6%9C%9F%E4%BA%8B%E4%BB%B6)
+
+<ul>
+<li><a href="#astrobefore-preparation"><code dir="auto">astro:before-preparation</code></a></li>
+<li><a href="#astroafter-preparation"><code dir="auto">astro:after-preparation</code></a></li>
+<li><a href="#astrobefore-swap"><code dir="auto">astro:before-swap</code></a></li>
+<li><a href="#astroafter-swap"><code dir="auto">astro:after-swap</code></a></li>
+<li><a href="#astropage-load"><code dir="auto">astro:page-load</code></a></li>
+</ul>
+---
+
 ## zod
 
 astro 中使用 zod 来进行数据校验。不用在安装 zod.

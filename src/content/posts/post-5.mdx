@@ -11,12 +11,17 @@ tags: ["react", "learning in public", "mdx", "community"]
 
 import Greeting from "../../components/Greeting";
 
+
+
 ## mdx
 
 需要 [astro MDX 集成](https://docs.astro.build/zh-cn/guides/integrations-guide/mdx/)
 
-```bash
-pnpm astro add mdx
-```
+import PackageManagers from "../../components/PackageManagers.astro";
+
+<PackageManagers pkg="astro" exec="add mdx" />
+> 看看与Expressive code的状态能不能共享。
+
+
 
 <Greeting messages={["Hej", "Hallo", "Hola", "Habari", "你好"]} client:load />

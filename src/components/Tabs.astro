@@ -4,9 +4,10 @@ interface Props {
 }
 import {Code} from 'astro-expressive-code/components';
 const {tabs} = Astro.props;
+const defaultTabName = tabs[0].label;
 ---
 
-<div>
+<div data-defaulttab={defaultTabName}>
   <div class="flex">
     {
       tabs.map(({label}, i) => (
@@ -20,7 +21,7 @@ const {tabs} = Astro.props;
 
   {
     tabs.map(({code, label}) => (
-      <div data-tab-name={label}>
+      <div data-tab-name={label} class:list={[label === defaultTabName?"block":"hidden"]}>
         <Code code={code} lang="sh" />
       </div>
     ))
@@ -28,24 +29,46 @@ const {tabs} = Astro.props;
 </div>
 
 <script>
-  const radios = document.querySelectorAll(
-    'input[type="radio"][data-tab-name]'
-  ) as NodeListOf<HTMLInputElement>;
+  // const defaultTabName =
+  function setActiveTab(tabName: string) {
+    const tabContents = document.querySelectorAll(
+      'div[data-tab-name]'
+    ) as NodeListOf<HTMLDivElement>;
+    tabContents.forEach((tabContent) => {
+      tabContent.style.display = 'none';
+    });
+    const activeTab = document.querySelector(`div[data-tab-name=${tabName}]`) as HTMLDivElement;
+    if (activeTab) activeTab.style.display = 'block';
+  }
 
-  radios.forEach((radio) => {
-    const tabName = radio.dataset.tabName;
+  document.addEventListener('astro:page-load', () => {
+    console.log('----------astro:page-load-----');
 
-    radio.addEventListener('change', () => {
-      const tabContents = document.querySelectorAll(
-        'div[data-tab-name]'
-      ) as NodeListOf<HTMLDivElement>;
-      tabContents.forEach((tabContent) => {
-        tabContent.style.display = 'none';
+    const radios = document.querySelectorAll(
+      'input[type="radio"][data-tab-name]'
+    ) as NodeListOf<HTMLInputElement>;
+    if (!radios) return;
+    radios.forEach((radio) => {
+      const tabName = radio.dataset.tabName as string;
+      radio.addEventListener('change', () => {
+        setActiveTab(tabName);
       });
-      const activeTab = document.querySelector(`div[data-tab-name=${tabName}]`) as HTMLDivElement;
-      activeTab.style.display = 'block';
     });
   });
 </script>
 
-<style></style>
+
+<style>
+  div[data-tab-name]{
+    animation: fadeIn 0.4s ease-out;
+  }
+  @keyframes fadeIn {
+    0% {
+      opacity: 0;
+      transform: translateX(50px);
+    }
+    100% {
+      opacity: 1;
+    }
+  }
+</style>
