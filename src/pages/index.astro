@@ -2,6 +2,15 @@
 import Layout from '../layouts/Layout.astro';
 import Card from '../components/Card.astro';
 import Greeting from '../components/Greeting';
+
+let counter = 0;
+
+if (Astro.cookies.has('counter')) {
+  const cookie = Astro.cookies.get('counter');
+  counter = cookie!.number() + 1;
+}
+
+Astro.cookies.set('counter', counter.toString());
 ---
 
 <Layout title="Welcome to Astro.">
@@ -33,6 +42,9 @@ import Greeting from '../components/Greeting';
       </defs>
     </svg>
     <h1><span class="text-gradient">MY Astro site</span></h1>
+
+    <h2 class="text-black black:text-white">cookie Counter = {counter}</h2>
+
     <Greeting messages={['Hej', 'Hallo', 'Hola', 'Habari', '你好']} client:load />
     <p class="instructions">
       To get started, open the directory <code>src/pages</code> in your project.<br />

@@ -4,13 +4,15 @@ import {getCollection} from 'astro:content';
 
 // const allPosts = await Astro.glob('../pages/posts/*.{md,mdx}');
 const allPosts = await getCollection('posts');
+
+const pathname = Astro.url.pathname;
 ---
 
 <aside id="posts-aside" class="z-10">
   <ul>
     {
       allPosts.map((post) => (
-        <li>
+        <li class:list={[pathname === `/${post.collection}/${post.slug}` && 'text-red-700']}>
           {/* <a href={post.url}>{post.frontmatter.title}</a> */}
           <a href={`/${post.collection}/${post.slug}`}>{post.data.title}</a>
         </li>
