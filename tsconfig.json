@@ -7,6 +7,6 @@
     "strictNullChecks": true,
     "allowJs": true,
     "baseUrl": ".",
-    "paths": { "@/*": ["src/*"] }
+    "paths": { "@/*": ["./src/*"] }
   }
 }

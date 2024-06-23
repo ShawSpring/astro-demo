@@ -15,6 +15,7 @@ import {getCollection} from 'astro:content';
 //   ];
 // }
 
+export const prerender = true;
 export const getStaticPaths = (async () => {
   // const allposts = await Astro.glob('../posts/*.md');
   const allposts = await getCollection('posts');

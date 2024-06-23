@@ -2,6 +2,9 @@
 import BlogLayout from '../../layouts/BlogLayout.astro';
 import {getCollection} from 'astro:content';
 
+/*  SSR 模式下， getStaticPaths被忽略， 需要下面这句来指明 该页面构建时预渲染 */
+export const prerender = true;
+
 export async function getStaticPaths() {
   const posts = await getCollection('posts');
   return posts.map((post) => {
@@ -11,8 +14,6 @@ export async function getStaticPaths() {
     };
   });
 }
-/*  SSR 模式下， getStaticPaths被忽略， 需要下面这句来指明 该页面构建时预渲染 */
-export const prerender = true;
 const {post} = Astro.props;
 const {Content} = await post.render();
 ---

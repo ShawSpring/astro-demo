@@ -2,6 +2,7 @@
   "name": "astro-demo",
   "type": "module",
   "version": "0.0.1",
+  "description": "this is an Astro demo project",
   "scripts": {
     "dev": "astro dev",
     "start": "astro dev",

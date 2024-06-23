@@ -1,7 +1,7 @@
-import { type APIRoute } from "astro";
-import { z } from "astro:content";
 export const prerender = false;
 
+import { type APIRoute } from "astro";
+import { z } from "astro/zod";
 export const feedbackSchema = z.object({
   name: z.string({ required_error: "Name is required" }).min(6).max(20),
   email: z.string({ required_error: "Email is required" }).email(),
