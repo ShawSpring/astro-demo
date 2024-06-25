@@ -4,7 +4,7 @@ import {Image} from 'astro:assets';
 const {frontmatter, title} = Astro.props;
 import PostsAside from '../components/PostsAside.astro';
 import {ViewTransitions, fade, slide} from 'astro:transitions';
-import {type CollectionEntry} from 'astro:content';
+import type {CollectionEntry} from 'astro:content';
 interface Props {
   title: string;
   frontmatter: CollectionEntry<'posts'>['data'];

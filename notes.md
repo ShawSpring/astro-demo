@@ -328,24 +328,43 @@ export const onRequest = sequence(validation, auth, greeting);
 
 ## Markdown / MDX
 
+[Markdown 插件](https://docs.astro.build/zh-cn/guides/markdown-content/#markdown-%E6%8F%92%E4%BB%B6)
+
+> remark 和 rehype 目前看来仅仅是解析markdown生成html, 不能像组件一样包括了css和js。
+
+
 插件收集：
 rehype-sanitize  防止 XSS
 
 支持obsidian的callout语法， 使得obsidian上的md文件能直接用于astro
 [remark-obsidian-callout
 ](https://www.npmjs.com/package/remark-obsidian-callout)
-> 没样式(可以自己css调)， 没有收起展开功能， 需要修改源码。
-想法： 可以生成一个headless组件，交互就修改data-* 属性。
+> 没样式(可以自己css调)， 没有收起展开功能(需要自己写addEventListener)。
 
 
 添加标题锚点连接
-[rehype-slug-anchor-sectionize](https://www.npmjs.com/package/rehype-slug-anchor-sectionize#optionswrapperslugadditivesectionize)
+[rehype-autolink-headings](https://www.npmjs.com/package/rehype-autolink-headings)
 ```ts
 // add ids to headings.
 import rehypeSlug from "rehype-slug";
 // add links to headings, 需要rehype-slug 才起作用。
 import rehypeAutolinkHeadings from "rehype-autolink-headings";
 // 代替上面两个，不同点在于，有section包裹，可惜href是指向headings， 不是section.
-import rehypeSlugAnchorSectionize from 'rehype-slug-anchor-sectionize'
+// import rehypeSlugAnchorSectionize from 'rehype-slug-anchor-sectionize'
 ```
 
+锚点样式
+```css
+      /* rehypeAutolinkHeadings插件给headings添加了anchor,但是样式还需要改改 */
+      :where(h1, h2, h3, h4, h5, h6) > a > .icon {
+        display: inline-block;
+        width: 1.5rem;
+        height: 1.5rem;
+        margin-right: 0.5rem;
+        background-repeat: no-repeat;
+        background-size: 100% 100%;
+      }
+      :where(h1, h2, h3, h4, h5, h6):hover > a > .icon {
+        background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 48 48'%3E%3Cg fill='none' stroke='currentColor' stroke-linejoin='round' stroke-width='4'%3E%3Crect width='14' height='18' x='34.607' y='3.494' rx='2' transform='rotate(45 34.607 3.494)'/%3E%3Crect width='14' height='18' x='16.223' y='21.879' rx='2' transform='rotate(45 16.223 21.879)'/%3E%3Cpath stroke-linecap='round' d='M31.0723 16.929L16.9301 31.0711'/%3E%3C/g%3E%3C/svg%3E");
+      }
+```
