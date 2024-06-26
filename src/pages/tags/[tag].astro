@@ -19,7 +19,7 @@ export const prerender = true;
 export const getStaticPaths = (async () => {
   // const allposts = await Astro.glob('../posts/*.md');
   const allposts = await getCollection('posts');
-  const uniqueTags = [...new Set(allposts.map((post) => post.data.tags).flat())];
+  const uniqueTags = [...new Set(allposts.flatMap((post) => post.data.tags))];
 
   return uniqueTags.map((tag) => {
     const filteredPosts = allposts.filter((post) => post.data.tags?.includes(tag));

@@ -1,6 +1,6 @@
 export const prerender = false;
 
-import { type APIRoute } from "astro";
+import type { APIRoute } from "astro";
 import { z } from "astro/zod";
 export const feedbackSchema = z.object({
   name: z.string({ required_error: "Name is required" }).min(6).max(20),
@@ -26,7 +26,7 @@ export const POST: APIRoute = async ({ request }) => {
         status: 200,
       }
     );
-  } else {
+  }
     // console.log(res.error.flatten().fieldErrors); // 一个field做键的对象
     return new Response(
       JSON.stringify({
@@ -34,5 +34,4 @@ export const POST: APIRoute = async ({ request }) => {
       }),
       { status: 400 } // bad request
     );
-  }
 };

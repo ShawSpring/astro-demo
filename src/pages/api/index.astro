@@ -3,7 +3,7 @@ import Layout from '@/layouts/Layout.astro';
 
 import {GET as HelloGet} from '@/pages/api/hello';
 // API 可以通过url访问，也可以调用， 传入Astro全局对象来提供上下文
-let helloRes = await HelloGet(Astro);
+const helloRes = await HelloGet(Astro);
 const helloData = await helloRes.json();
 
 import FeedbackForm from '@/components/FeedbackForm.tsx';
@@ -22,9 +22,4 @@ import FeedbackForm from '@/components/FeedbackForm.tsx';
       <FeedbackForm client:load />
     </figure>
   </article>
-  <ul>
-    <li>apple</li>
-    <li>banana</li>
-    <li>orange</li>
-  </ul>
 </Layout>

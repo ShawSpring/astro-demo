@@ -39,7 +39,7 @@ export default function Form() {
   return (
     <form
       onSubmit={submit}
-      className="grid grid-cols-1  w-96 border border-black"
+      className="grid grid-cols-1  w-96 border border-black [&_input]:ring-1"
     >
       <div className="relative pb-8">
         <label htmlFor="name" className="flex justify-between">

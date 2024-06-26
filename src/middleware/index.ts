@@ -5,7 +5,7 @@ export const onRequest = defineMiddleware(async (context, next) => {
   // const cookie = context.cookies.get("counter");
   if (!context.locals.title) context.locals.title = "Astro";
   // return next();
-  console.time("onRequest: " + context.url.pathname);
+  console.time(`onRequest: ${context.url.pathname}`);
   await next();
-  console.timeEnd("onRequest: " + context.url.pathname);
+  console.timeEnd(`onRequest: ${context.url.pathname}`);
 });

@@ -3,7 +3,7 @@ import {getCollection} from 'astro:content';
 import Layout from '../../layouts/Layout.astro';
 // const allPosts = await Astro.glob('../posts/*.{md,mdx}');
 const allPosts = await getCollection('posts');
-const uniqueTags = [...new Set(allPosts.map((post) => post.data.tags).flat())];
+const uniqueTags = [...new Set(allPosts.flatMap((post) => post.data.tags))];
 ---
 
 <Layout title="Tags Index">

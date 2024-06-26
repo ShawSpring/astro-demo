@@ -1,15 +1,15 @@
 ---
-import {Code} from 'astro-expressive-code/components';
-import fs from 'fs';
-import {extname} from 'path';
+import { Code } from "astro-expressive-code/components";
+import fs from "node:fs";
+import { extname } from "node:path";
 interface Props {
-  path: string;
-  mark?: string | string[];
+	path: string;
+	mark?: string | string[];
 }
 
-const {path, mark = undefined} = Astro.props;
+const { path, mark = undefined } = Astro.props;
 // 另外中方式，使用 import "  ?raw" 导入源码
-const footer = fs.readFileSync(path, 'utf-8');
+const footer = fs.readFileSync(path, "utf-8");
 // const lang = path.split('.').pop();
 const lang = extname(path).slice(1);
 ---
