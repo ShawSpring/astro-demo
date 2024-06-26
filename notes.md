@@ -368,3 +368,36 @@ import rehypeAutolinkHeadings from "rehype-autolink-headings";
         background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 48 48'%3E%3Cg fill='none' stroke='currentColor' stroke-linejoin='round' stroke-width='4'%3E%3Crect width='14' height='18' x='34.607' y='3.494' rx='2' transform='rotate(45 34.607 3.494)'/%3E%3Crect width='14' height='18' x='16.223' y='21.879' rx='2' transform='rotate(45 16.223 21.879)'/%3E%3Cpath stroke-linecap='round' d='M31.0723 16.929L16.9301 31.0711'/%3E%3C/g%3E%3C/svg%3E");
       }
 ```
+
+
+### 锚点滚动
+[锚点定位被顶部固定导航栏遮住的解决方案](https://juejin.cn/post/6844904118738223117)
+
+滚动机制： 滚动到目标元素的`padding-box`上边缘与滚动容器上边平齐， 但是有导航栏时跑到了导航栏的下边。
+scroll container
+```css
+html{
+  scroll-padding-top: var(--header-h,60px);
+}
+```
+or anchor target element
+```css
+.post-container :where(h1, h2, h3, h4, h5, h6){
+  scroll-margin-top: var(--header-h,60px);
+}
+```
+方案二： 调整目标元素的padding-top来填充上边，再用margin-top(margin不影响锚点滚动定位)来修正。
+```css
+     .post-container :where(h1, h2, h3, h4, h5, h6){
+        margin-top: -2rem;
+        padding-top: 4rem;
+      }
+```
+或加上`:target` 限制仅仅是锚点目标时才应用样式，但是`:target`兼容性IE8以下不支持
+```css
+    .post-container :where(h1, h2, h3, h4, h5, h6):target{
+        margin-top: calc(var(--header-h) * -1);
+        padding-top: var(--header-h);
+      }
+```
+
